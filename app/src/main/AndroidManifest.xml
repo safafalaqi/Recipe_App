@@ -13,16 +13,18 @@
         android:theme="@style/Theme.RecipeApp">
         <activity
             android:name=".ViewRecipeActivity"
-
+            android:screenOrientation="portrait"
             android:exported="true" >
             <meta-data android:name="android.support.PARENT_ACTIVITY"
                 android:value=".MainActivity"/>
         </activity>
         <activity
             android:name=".AddRecipeActivity"
+            android:screenOrientation="portrait"
             android:exported="true" />
         <activity
             android:name=".MainActivity"
+            android:screenOrientation="portrait"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
