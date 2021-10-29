@@ -10,11 +10,18 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
+import com.example.recipeapp.database.Recipe
+import com.example.recipeapp.database.RecipeDatabase
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
 class AddRecipeActivity : AppCompatActivity() {
+    private val recipeDao by lazy{ RecipeDatabase.getInstance(this).recipeDao() }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_addrecipe)
@@ -47,35 +54,20 @@ class AddRecipeActivity : AppCompatActivity() {
     }
 
     private fun addRecipe(title: String, author: String, ingredient: String, instruction: String) {
-        //show progress Dialog
-        val progressDialog = ProgressDialog(this@AddRecipeActivity)
-        progressDialog.setMessage("Please wait")
-        progressDialog.show()
+
         //check if user inputs are not empty
         if(title.isNotEmpty()|| author.isNotEmpty()|| ingredient.isNotEmpty()|| instruction.isNotEmpty()) {
-            val apiInterface = APIClient().getClient()?.create(APIInterface::class.java)
-            val user = RecipesItem(title,author,ingredient,instruction)
-            val call: Call<RecipesItem> = apiInterface!!.addUsersInfo(user)
-
-            call?.enqueue(object : Callback<RecipesItem?> {
-                override fun onResponse(
-                    call: Call<RecipesItem?>?,
-                    response: Response<RecipesItem?>
-                ) {
-                    progressDialog.dismiss()
-                    Toast.makeText(applicationContext, "Save Success!", Toast.LENGTH_SHORT).show()
-                }
-                override fun onFailure(call: Call<RecipesItem?>, t: Throwable) {
-                    Toast.makeText(applicationContext, "Unable to add recipe.", Toast.LENGTH_SHORT)
+            CoroutineScope(Dispatchers.IO).launch {
+                recipeDao.addRecipe(Recipe(0, title, author, ingredient, instruction))
+                withContext(Dispatchers.Main) {
+                    Toast.makeText(this@AddRecipeActivity, "Added Successfully!", Toast.LENGTH_SHORT)
                         .show()
-                    progressDialog.dismiss()
-                    call.cancel()
                 }
-            })
+            }
         }
         else {
-            Toast.makeText(applicationContext, "Please do not leave it empty!", Toast.LENGTH_SHORT).show()
-            progressDialog.dismiss()
+            Toast.makeText(this, "Please do not leave it empty!", Toast.LENGTH_SHORT).show()
+
         }
     }
     //to hide the keyboard
