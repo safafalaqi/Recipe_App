@@ -21,10 +21,10 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 
-class RVAdapter(private var recipes: List<Recipe>, val context:Context): RecyclerView.Adapter<RVAdapter.ItemViewHolder>() {
+class RVAdapter(val mainActivity: MainActivity): RecyclerView.Adapter<RVAdapter.ItemViewHolder>() {
     class ItemViewHolder(val binding: ItemRowBinding): RecyclerView.ViewHolder(binding.root)
 
-    private val recipeDao by lazy{ RecipeDatabase.getInstance(context).recipeDao() }
+     var recipes= emptyList<Recipe>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ItemViewHolder {
         return ItemViewHolder(
@@ -40,9 +40,9 @@ class RVAdapter(private var recipes: List<Recipe>, val context:Context): Recycle
             tvAuthor.text = "By: "+ author
         }
         holder.itemView.setOnClickListener{
-                val intent = Intent(context, ViewRecipeActivity::class.java)
+                val intent = Intent(mainActivity, ViewRecipeActivity::class.java)
                 intent.putExtra("recipes", recipes[position])
-                context.startActivity(intent)
+            mainActivity.startActivity(intent)
             }
         holder.binding.btimgdel.setOnClickListener{
             delete(recipes[position])
@@ -56,9 +56,8 @@ class RVAdapter(private var recipes: List<Recipe>, val context:Context): Recycle
 
 
     fun update(i:Int) {
-
-        val dialog = Dialog(context)
-        val dialogview = LayoutInflater.from(context)
+        val dialog = Dialog(mainActivity)
+        val dialogview = LayoutInflater.from(mainActivity)
             .inflate(R.layout.dialog_custom, null, false)
         //initializing dialog screen
         dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
@@ -81,18 +80,15 @@ class RVAdapter(private var recipes: List<Recipe>, val context:Context): Recycle
         update.setOnClickListener {
             if (title.text.isNotBlank() && author.text.isNotBlank()&&
                 ingredients.text.isNotBlank()&& instruction.text.isNotBlank()) {
-                CoroutineScope(Dispatchers.IO).launch {
                     recipes[i].title=title.text.toString()
                     recipes[i].author=author.text.toString()
                     recipes[i].ingredients=ingredients.text.toString()
                     recipes[i].instructions=instruction.text.toString()
-                    recipeDao.updateRecipe(recipes[i])
-                    recipes = recipeDao.getRecipes()
-                    withContext(Dispatchers.Main){ notifyDataSetChanged()}
+                    mainActivity.myViewModel.updateRecipe(recipes[i])
                     dialog.dismiss()
-                }
-            } else {
-                Toast.makeText(context, " can not be empty!", Toast.LENGTH_SHORT).show()
+                }else
+                {
+                Toast.makeText(mainActivity, " can not be empty!", Toast.LENGTH_SHORT).show()
                 dialog.dismiss()
             }
         }
@@ -104,19 +100,17 @@ class RVAdapter(private var recipes: List<Recipe>, val context:Context): Recycle
     }
 
     fun delete(recipe: Recipe){
-        val dialogBuilder = android.app.AlertDialog.Builder(context)
+        val dialogBuilder = android.app.AlertDialog.Builder(mainActivity)
         dialogBuilder.setMessage("Are you sure you want to delete the note?")
             // negative button text and action
             .setPositiveButton("yes", DialogInterface.OnClickListener {
                     dialog, id ->
-                CoroutineScope(Dispatchers.IO).launch {
-                    recipeDao.deleteRecipe(recipe)
-                    recipes = recipeDao.getRecipes()
-                    withContext(Dispatchers.Main){ notifyDataSetChanged()}
-                }
+                    mainActivity.myViewModel.deleteRecipe(recipe)
+
             })
             .setNegativeButton("Cancel", DialogInterface.OnClickListener {
-                    dialog, id -> dialog.cancel()
+                    dialog, id ->
+                dialog.cancel()
                 notifyDataSetChanged()
             })
         // create dialog box

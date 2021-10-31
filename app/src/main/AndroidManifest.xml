@@ -19,7 +19,7 @@
                 android:value=".MainActivity"/>
         </activity>
         <activity
-            android:name=".AddRecipeActivity"
+            android:name=".AddRecipeFragment"
             android:screenOrientation="portrait"
             android:exported="true" />
         <activity
