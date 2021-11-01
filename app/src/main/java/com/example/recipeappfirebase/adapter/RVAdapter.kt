@@ -1,6 +1,5 @@
-package com.example.recipeapp
+package com.example.recipeappfirebase.adapter
 import android.app.Dialog
-import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
 import android.graphics.Color
@@ -12,13 +11,11 @@ import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.widget.AppCompatImageButton
 import androidx.recyclerview.widget.RecyclerView
-import com.example.recipeapp.database.Recipe
-import com.example.recipeapp.database.RecipeDatabase
-import com.example.recipeapp.databinding.ItemRowBinding
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import com.example.recipeappfirebase.MainActivity
+import com.example.recipeappfirebase.R
+import com.example.recipeappfirebase.ViewRecipeActivity
+import com.example.recipeappfirebase.data.Recipe
+import com.example.recipeappfirebase.databinding.ItemRowBinding
 
 
 class RVAdapter(val mainActivity: MainActivity): RecyclerView.Adapter<RVAdapter.ItemViewHolder>() {

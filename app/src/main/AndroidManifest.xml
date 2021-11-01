@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.recipeapp">
+    package="com.example.recipeappfirebase">
 
     <uses-permission android:name="android.permission.INTERNET" />
 
@@ -12,18 +12,18 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.RecipeApp">
         <activity
-            android:name=".ViewRecipeActivity"
+            android:name="com.example.recipeappfirebase.ViewRecipeActivity"
             android:screenOrientation="portrait"
             android:exported="true" >
             <meta-data android:name="android.support.PARENT_ACTIVITY"
-                android:value=".MainActivity"/>
+                android:value="com.example.recipeappfirebase.MainActivity"/>
         </activity>
         <activity
             android:name=".AddRecipeFragment"
             android:screenOrientation="portrait"
             android:exported="true" />
         <activity
-            android:name=".MainActivity"
+            android:name="com.example.recipeappfirebase.MainActivity"
             android:screenOrientation="portrait"
             android:exported="true">
             <intent-filter>

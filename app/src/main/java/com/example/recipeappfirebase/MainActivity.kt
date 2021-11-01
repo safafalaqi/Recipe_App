@@ -1,4 +1,4 @@
-package com.example.recipeapp
+package com.example.recipeappfirebase
 
 
 
@@ -9,12 +9,13 @@ import androidx.appcompat.app.ActionBar
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.recipeapp.databinding.ActivityMainBinding
+import com.example.recipeappfirebase.databinding.ActivityMainBinding
 import android.content.Context
 import android.view.inputmethod.InputMethodManager
 import android.widget.Toast
 import androidx.core.view.isVisible
-import com.example.recipeapp.database.Recipe
+import com.example.recipeappfirebase.adapter.RVAdapter
+import com.example.recipeappfirebase.data.Recipe
 
 
 class MainActivity : AppCompatActivity() {
@@ -58,7 +59,7 @@ class MainActivity : AppCompatActivity() {
         }
 
 
-        }
+    }
 
     private fun addRecipe() {
         binding.llMain.isVisible=false
@@ -75,7 +76,7 @@ class MainActivity : AppCompatActivity() {
             //check if user inputs are not empty
             if(title.isNotEmpty()|| author.isNotEmpty()
                 || ingredient.isNotEmpty()|| instruction.isNotEmpty()) {
-                myViewModel.addRecipe(Recipe(0,title.toString(),author.toString(),ingredient.toString(),instruction.toString()))
+                myViewModel.addRecipe(Recipe(null,title.toString(),author.toString(),ingredient.toString(),instruction.toString()))
                 Toast.makeText(this, "Added Successfully!", Toast.LENGTH_SHORT)
                     .show()
             }

@@ -1,9 +1,9 @@
-package com.example.recipeapp
+package com.example.recipeappfirebase
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.TextView
-import com.example.recipeapp.database.Recipe
+import com.example.recipeappfirebase.data.Recipe
 
 
 class ViewRecipeActivity : AppCompatActivity() {

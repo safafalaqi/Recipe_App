@@ -1,4 +1,4 @@
-package com.example.recipeapp
+package com.example.recipeappfirebase
 
 import org.junit.Test
 
