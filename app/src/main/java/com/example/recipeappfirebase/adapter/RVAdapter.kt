@@ -11,14 +11,14 @@ import android.widget.EditText
 import android.widget.Toast
 import androidx.appcompat.widget.AppCompatImageButton
 import androidx.recyclerview.widget.RecyclerView
-import com.example.recipeappfirebase.MainActivity
+import com.example.recipeappfirebase.FragmentHome
 import com.example.recipeappfirebase.R
 import com.example.recipeappfirebase.ViewRecipeActivity
 import com.example.recipeappfirebase.data.Recipe
 import com.example.recipeappfirebase.databinding.ItemRowBinding
 
 
-class RVAdapter(val mainActivity: MainActivity): RecyclerView.Adapter<RVAdapter.ItemViewHolder>() {
+class RVAdapter(val fragmentHome: FragmentHome): RecyclerView.Adapter<RVAdapter.ItemViewHolder>() {
     class ItemViewHolder(val binding: ItemRowBinding): RecyclerView.ViewHolder(binding.root)
 
      var recipes= emptyList<Recipe>()
@@ -37,9 +37,9 @@ class RVAdapter(val mainActivity: MainActivity): RecyclerView.Adapter<RVAdapter.
             tvAuthor.text = "By: "+ author
         }
         holder.itemView.setOnClickListener{
-                val intent = Intent(mainActivity, ViewRecipeActivity::class.java)
+                val intent = Intent(fragmentHome.context, ViewRecipeActivity::class.java)
                 intent.putExtra("recipes", recipes[position])
-            mainActivity.startActivity(intent)
+            fragmentHome.startActivity(intent)
             }
         holder.binding.btimgdel.setOnClickListener{
             delete(recipes[position])
@@ -53,11 +53,11 @@ class RVAdapter(val mainActivity: MainActivity): RecyclerView.Adapter<RVAdapter.
 
 
     fun update(i:Int) {
-        val dialog = Dialog(mainActivity)
-        val dialogview = LayoutInflater.from(mainActivity)
+        val dialog = fragmentHome.context?.let { Dialog(it) }
+        val dialogview = LayoutInflater.from(fragmentHome.context)
             .inflate(R.layout.dialog_custom, null, false)
         //initializing dialog screen
-        dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+        dialog!!.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
         dialog?.setCancelable(true)
         dialog?.setContentView(dialogview)
         dialog?.show()
@@ -81,11 +81,11 @@ class RVAdapter(val mainActivity: MainActivity): RecyclerView.Adapter<RVAdapter.
                     recipes[i].author=author.text.toString()
                     recipes[i].ingredients=ingredients.text.toString()
                     recipes[i].instructions=instruction.text.toString()
-                    mainActivity.myViewModel.updateRecipe(recipes[i])
+                    fragmentHome.myViewModel.updateRecipe(recipes[i])
                     dialog.dismiss()
                 }else
                 {
-                Toast.makeText(mainActivity, " can not be empty!", Toast.LENGTH_SHORT).show()
+                Toast.makeText(fragmentHome.context, " can not be empty!", Toast.LENGTH_SHORT).show()
                 dialog.dismiss()
             }
         }
@@ -97,12 +97,12 @@ class RVAdapter(val mainActivity: MainActivity): RecyclerView.Adapter<RVAdapter.
     }
 
     fun delete(recipe: Recipe){
-        val dialogBuilder = android.app.AlertDialog.Builder(mainActivity)
+        val dialogBuilder = android.app.AlertDialog.Builder(fragmentHome.context)
         dialogBuilder.setMessage("Are you sure you want to delete the note?")
             // negative button text and action
             .setPositiveButton("yes", DialogInterface.OnClickListener {
                     dialog, id ->
-                    mainActivity.myViewModel.deleteRecipe(recipe)
+                    fragmentHome.myViewModel.deleteRecipe(recipe)
 
             })
             .setNegativeButton("Cancel", DialogInterface.OnClickListener {
